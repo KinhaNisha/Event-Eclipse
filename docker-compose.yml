@@ -1,0 +1,35 @@
+services:
+  app:
+    # container_name: event_eclipse_backend
+    restart: always
+    build: .
+    ports:
+      - "${APP_PORT}:5000" # External:Internal
+    depends_on:
+      - db
+    networks:
+      - eventeclipse_network
+
+  db:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:3306"
+    command: ['--max_allowed_packet=64M']
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d/
+    restart: always
+    networks:
+      - eventeclipse_network
+
+volumes:
+  db_data:
+
+networks:
+  eventeclipse_network:
+    driver: bridge
