@@ -1,23 +1,18 @@
-// const mariadb = require('mariadb');
+// database.js
 
-// const pool = mariadb.createPool({
-//   host: 'mariadb',
-//   user: 'event_eclipse',
-//   password: 'event_eclipse',
-//   database: 'event_eclipse'
-// });
+import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv'
 
-// app.get('/data', async (req, res) => {
-//   let conn;
-//   try {
-//       conn = await pool.getConnection();
-//       const rows = await conn.query("SELECT 1 as val");
-//       console.log("Successfully connected to the database.");
-//       res.json(rows);
-//   } catch (err) {
-//       console.error("Failed to connect to the database.", err);
-//       res.status(500).send("Failed to connect to the database.");
-//   } finally {
-//       if (conn) conn.end();
-//   }
-// });
+dotenv.config()
+
+const sequelize = new Sequelize({
+  dialect: 'mysql',
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  logging: true,
+});
+
+export default sequelize;

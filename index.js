@@ -1,79 +1,38 @@
-const express = require('express');
-const mysql = require('mysql');
-require('dotenv').config();
+import express from 'express';
+import ip from 'ip';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import logger from './src/Utils/Logger.js';
+import UserRoutes from './src/Routes/UserRoutes.js';
+import sequelize from './config/database.js';
 
+dotenv.config();
 const app = express();
-const port = process.env.APP_PORT;
+const PORT = process.env.APP_PORT || 3000;
 
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Event Eclipse server is alive!');
-});
+// Define different base paths for API versions
+const v1Router = express.Router();
+const v2Router = express.Router();
 
-app.get('/api/demo', (req, res) => {
-    const users = [
-        { id: 1, name: 'John Doe', role: 'Developer' },
-        { id: 2, name: 'Jane Doe', role: 'Manager' }
-    ];
+// Use API versions as base paths
+app.use('/api/v1', v1Router);
+app.use('/api/v2', v2Router);
 
-    res.json({
-        success: true,
-        message: 'User data fetched successfully',
-        data: users
-    });
-});
+v1Router.use('/user', UserRoutes);
+v2Router.use('/user', UserRoutes);
 
-const pool = mysql.createPool({
-    host: process.env.MYSQL_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
-
-app.get('/data', async (req, res) => {
-    let conn;
+app.get('/checkdb', async (req, res) => {
     try {
-        conn = await pool.getConnection();
-        const rows = await conn.query("SELECT 1 as val");
-        console.log("Successfully connected to the database.");
-        res.json(rows);
-    } catch (err) {
-        console.error("Failed to connect to the database.", err);
-        res.status(500).send("Failed to connect to the database.");
-    } finally {
-        if (conn) conn.end();
+        await sequelize.authenticate();
+        res.status(200).send('Database connection successful');
+    } catch (error) {
+        res.status(500).send('Failed to connect to the database');
     }
 });
 
-app.get('/api/events', async (req, res) => {
-    const sql = `SELECT * FROM events;`;
-
-    let conn;
-    try {
-        conn = await pool.getConnection();
-        const [rows] = await conn.query(sql);
-        console.log("Fetched events successfully.");
-        res.json({
-            success: true,
-            message: 'Events fetched successfully',
-            data: rows
-        });
-    } catch (err) {
-        console.error("Failed to fetch events.", err);
-        res.status(500).send({
-            success: false,
-            message: "Failed to fetch events."
-        });
-    } finally {
-        if (conn) conn.release();
-    }
-});
-
-
-app.listen(port, () => {
-    console.log(`Event Eclipse server is running on port: ${port}`);
+app.listen(PORT, () => {
+    logger.info(`Event Eclipse server is running on: http://${ip.address()}:${PORT}`);
 });

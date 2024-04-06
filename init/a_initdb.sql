@@ -1,0 +1,5 @@
+-- initdb.sql
+
+CREATE USER IF NOT EXISTS 'admin'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
