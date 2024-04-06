@@ -1,5 +1,5 @@
-import express from 'express';
-import UserController from '../Controller/UserController.js';
+const express = require('express');
+const UserController = require('../Controller/UserController.js');
 
 const userRoutes = express.Router();
 
@@ -12,4 +12,4 @@ userRoutes.route('/:id')
     .put(UserController.updateUserById)
     .delete(UserController.deleteUserById);
 
-export default userRoutes;
+module.exports = userRoutes;

@@ -1,4 +1,5 @@
-import User from '../Model/UserModel.js';
+const User = require('../Model/UserModel.js');
+
 
 class UserRepository {
   async findAllUsers() {
@@ -15,7 +16,7 @@ class UserRepository {
       const user = await User.create({ name, email, password });
       return user;
     } catch (error) {
-      throw new Error('Error creating user');
+      throw new Error(error.message);
     }
   }
 
@@ -24,7 +25,7 @@ class UserRepository {
       const user = await User.findByPk(id);
       return user;
     } catch (error) {
-      throw new Error('Error fetching user');
+      throw new Error(error.message);
     }
   }
 
@@ -32,12 +33,12 @@ class UserRepository {
     try {
       const user = await User.findByPk(id);
       if (!user) {
-        throw new Error('User not found');
+        throw new Error(error.message);
       }
       await user.update(newData);
       return user;
     } catch (error) {
-      throw new Error('Error updating user');
+      throw new Error(error.message);
     }
   }
 
@@ -45,15 +46,15 @@ class UserRepository {
     try {
       const user = await User.findByPk(id);
       if (!user) {
-        throw new Error('User not found');
+        throw new Error(error.message);
       }
       await user.destroy();
       return true;
     } catch (error) {
-      throw new Error('Error deleting user');
+      throw new Error(error.message);
     }
   }
 
 }
 
-export default new UserRepository();
+module.exports = new UserRepository();

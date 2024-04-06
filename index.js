@@ -1,10 +1,11 @@
-import express from 'express';
-import ip from 'ip';
-import dotenv from 'dotenv';
-import cors from 'cors';
-import logger from './src/Utils/Logger.js';
-import UserRoutes from './src/Routes/UserRoutes.js';
-import sequelize from './config/database.js';
+const express = require('express');
+const ip = require('ip');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const logger = require('./src/Utils/Logger.js'); 
+const UserRoutes = require('./src/Routes/UserRoutes.js'); 
+const sequelize = require('./config/database.js'); 
+
 
 dotenv.config();
 const app = express();

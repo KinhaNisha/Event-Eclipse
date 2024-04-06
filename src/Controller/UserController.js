@@ -1,8 +1,8 @@
-import HttpStatus from '../Utils/httpStatusCode.js';
-import Response from '../../domain/response.js';
-import logger from '../Utils/Logger.js';
-import UserRepository from '../Repository/UserRepository.js';
-import User from '../Model/UserModel.js';
+const HttpStatus = require('../Utils/HttpStatusCode.js');
+const Response = require('../../domain/response.js');
+const logger = require('../Utils/Logger.js');
+const UserRepository = require('../Repository/UserRepository.js');
+const User = require('../Model/UserModel.js');
 
 class UserController {
     async getUsers(req, res) {
@@ -27,7 +27,7 @@ class UserController {
     async createUser(req, res) {
         const { name, email, password } = req.body;
     
-        logger.info(`User created successfully: ${name}`);
+        logger.info(`User detailes: ${name} ${email} ${password}`);
         try {
             const user = await UserRepository.createUser(name, email, password);
     
@@ -53,4 +53,4 @@ class UserController {
     }
 }
 
-export default new UserController();
+module.exports = new UserController();

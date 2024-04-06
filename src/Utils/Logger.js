@@ -1,7 +1,7 @@
-import logger from 'pino'
+const pino = require('pino');
 
-const log = logger({
-    base: { pid: false},
+const logger = pino({
+    base: { pid: false },
     transport: {
         target: 'pino-pretty',
         options: {
@@ -9,6 +9,6 @@ const log = logger({
         }
     },
     timestamp: () => `,"time": "${new Date().toLocaleString()}"`
-})
+});
 
-export default log
+module.exports = logger;

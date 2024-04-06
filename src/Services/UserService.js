@@ -1,5 +1,5 @@
-import bcrypt from 'bcrypt'
-import dotenv from 'dotenv'
+const bcrypt = require('bcrypt');
+const dotenv = require('dotenv');
 
 dotenv.config();
 
@@ -10,7 +10,7 @@ class UserService {
             const hashedPassword = bcrypt.hash(password, saltRounds);
             return hashedPassword;
         } catch (error) {
-            throw new Error('Error hashing password');
+            throw new Error(error.message);
         }
     }
 }

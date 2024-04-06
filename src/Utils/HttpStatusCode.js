@@ -7,4 +7,4 @@ const HttpStatus = {
     INTERNAL_SERVER_ERROR: 500,
 }
 
-export default HttpStatus
+module.exports = HttpStatus
